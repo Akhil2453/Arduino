@@ -1,5 +1,5 @@
 /*
-   This code will light each led in the 4x4 matrix one at a time
+   Display values of LEDData across 4*4 matrix
 */
 
 const int latchPin = 8;
@@ -10,6 +10,8 @@ byte i;
 byte j;
 
 byte dataTS;
+
+byte ledData[] = {9,13,11,9};
 
 void setup() {
   // put your setup code here, to run once:
@@ -22,15 +24,12 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   for (i = 0; i < 4; i++) {
-    for (j = 0; j < 4; j++) {
+    byte dataTS = (1 << (i + 4)) | (15 & ~ ledData[i]);
 
-      dataTS = (1 << (i + 4)) | (15 & ~ (1 << j));
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, dataTS);
+    digitalWrite(latchPin, HIGH);
 
-      digitalWrite(latchPin, LOW);
-      shiftOut(dataPin, clockPin, LSBFIRST, dataTS);
-      digitalWrite(latchPin, HIGH);
-
-      delay(500);
-    }
+    //delay(500);
   }
 }
